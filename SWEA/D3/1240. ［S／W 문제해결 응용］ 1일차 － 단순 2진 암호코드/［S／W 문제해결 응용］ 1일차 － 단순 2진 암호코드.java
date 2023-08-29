@@ -1,185 +1,185 @@
-import java.util.Arrays;
-import java.util.Scanner;
-import java.io.FileInputStream;
-import java.lang.reflect.Array;
 
-/*
-   사용하는 클래스명이 Solution 이어야 하므로, 가급적 Solution.java 를 사용할 것을 권장합니다.
-   이러한 상황에서도 동일하게 java Solution 명령으로 프로그램을 수행해볼 수 있습니다.
- */
-class Solution
-{
-	public static void main(String args[]) throws Exception
-	{
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.InputStreamReader;
+import java.util.StringTokenizer;
+
+class Solution {
+	public static void main(String args[]) throws Exception {
 
 		//System.setIn(new FileInputStream("res/input.txt"));
 
-
-		Scanner sc = new Scanner(System.in);
+		BufferedReader sc = new BufferedReader(new InputStreamReader(System.in));
 		int T;
-		T=sc.nextInt();
+		T = Integer.parseInt(sc.readLine());
 		/*
-		   여러 개의 테스트 케이스가 주어지므로, 각각을 처리합니다.
-		*/
+		 * 여러 개의 테스트 케이스가 주어지므로, 각각을 처리합니다.
+		 */
 		StringBuilder sbAsw = new StringBuilder();
 
-	for(int test_case = 1; test_case <= T; test_case++){
-			int N = sc.nextInt();
-			int M = sc.nextInt();
+		for (int test_case = 1; test_case <= T; test_case++) {
+			StringTokenizer st = new StringTokenizer(sc.readLine());
+			int N = Integer.parseInt(st.nextToken());
+			int M = Integer.parseInt(st.nextToken());
 			String code = null;
 			String temp;
-			//전부 입력 받기
-			for(int i=0; i<N;i++) {
-				temp = sc.next();
-				if(temp.contains("1")) {
+			char[] tmpArr = null;
+			boolean ck = true;
+			// 전부 입력 받기
+			for (int i = 0; i < N; i++) {
+				temp = sc.readLine();
+				if (ck && temp.contains("1")) {
 					code = temp;
+					ck = false;
 				}
 			}
-			
-			StringBuffer sb = new StringBuffer(code);
-			
-			char[] arrCode = code.toCharArray();
-			
-			int codeEndIdx = 0;
-			for(int i=0; i<arrCode.length;i++) {
-				if(arrCode[arrCode.length-i-1]=='1') {
-					codeEndIdx = arrCode.length-i-1;
+			tmpArr = code.toCharArray();
+			int idx = tmpArr.length - 1;
+			while (tmpArr[idx--] != '1')
+				;
+			// 뒤에서부터 처음으로 1이 나오는 idx
+			idx++;
+
+			// 암호파트만 뽑아내기
+			int[] arr = new int[56];
+			for (int i = 55; i >= 0; i--) {
+				arr[i] = tmpArr[idx--] - '0';
+			}
+
+			// 돌때마다 7개 숫자의 값 담는 곳
+			int codeint = 0;
+
+			// cnt = arr 순환용
+			int cnt = 0;
+
+			// 최종 sum
+			int finSum = 0;
+			// 암호여부 체크
+			int chkSum = 0;
+			// 암호숫자
+			int tmpCode = 0;
+
+			for (int c = 0; c < 8; c++) {
+				codeint = 0;
+
+				for (int j = 6; j >= 0; j--) {
+					codeint += arr[cnt++] * Math.pow(2, j);
+				}
+
+				int com = 1;
+
+				// 1을 세고 있을때는 true
+				boolean pp = false;
+				int tmpcnt = 0;
+
+				int sum = 0;
+				// 가장 많이 미룰 때부터 카운트
+				for (int i = 6; i >= 0; i--) {
+
+					// (codeint>>i)&1 가장 끝자리 수가 1일 때만 1 반환
+					if (((codeint >> i) & 1) == 1) {
+						// 끝자리가 1이라면
+
+						// 이전에 1을 세고 있었으면 true
+						if (pp) {
+							// 연속된 숫자를 늘려준다.
+							tmpcnt++;
+						} else {
+							// 이전에 0을 세고 있었으면 false
+							pp = !pp;
+
+							sum = sum * 10 + tmpcnt;
+							tmpcnt = 1;
+
+						}
+
+					} else {
+						// 끝자리가 0이라면
+
+						// 이전에 0을 세고 있었으면
+						if (!pp) {
+							// 연속된 숫자를 늘려준다.
+							tmpcnt++;
+						} else {
+							// 이전에 0을 세고 있었으면 false
+							pp = !pp;
+							sum = sum * 10 + tmpcnt;
+							tmpcnt = 1;
+						}
+					}
+
+				}
+
+				switch (sum) {
+				case 321:
+
+					tmpCode = 0;
 					break;
-				}
-			}
-			
-			sb.setLength(0);
-			//5:0110001
-			//1:0011001
-			//0:0001101
-			//3:0111101
-			//2:0010011
-			//4:0100011
-			//9:0001011
-			//7:0111011
-			//8:0110111
-			//6:0101111
-			//codeEndIdx에서부터 7씩 빼면서 탐색
-			//현재 봐야하는인덱스 idx;
-			//가장 뒷자리는 항상 1이므로
-			int idx = codeEndIdx;
-			int[] intCode = new int[8];
-			int cnt = 7;
-			while(idx>=0 && arrCode[idx]=='1') {
-			//뒤의 다섯자리 확인하면 됨
-				
-				
-				//뒤에서 두 번째 자리
-codeCheck:	switch(arrCode[idx-1]) {
-				
-				case '0':
-					//뒤에서 세 번째 자리
-					switch(arrCode[idx-2]) {
-					case '0':
-						//네 번째 자리만 체크하면 됨
-						if(arrCode[idx-3]=='0') {
-							intCode[cnt]=5;
-							//sb.insert(0, 5);
-							break codeCheck;
-						}else {
-							intCode[cnt]=1;
-							//sb.insert(0, 1);
-							break codeCheck;
-						}
-					
-					case '1':						
-						//다섯 번째 자리만 체크하면 됨
-						if(arrCode[idx-4]=='0') {
-							intCode[cnt]=0;
-							//sb.insert(0, 0);
-							break codeCheck;
-						}else {
-							intCode[cnt]=3;
-							//sb.insert(0, 3);
-							break codeCheck;
-						}
-						
-					}
-				case '1':
-					//세 번째 자리  1인 경우가 2
-					if(arrCode[idx-2]=='1') {
-						//네 번째 자리 차이 체크
-						if(arrCode[idx-3]=='0') {
-							intCode[cnt]=8;
-							//sb.insert(0, 8);
-							break codeCheck;
-						}else {
-							intCode[cnt]=6;
-							//sb.insert(0, 6);
-							break codeCheck;
-						}
+				case 222:
 
-					}else {
-						
-						//2:0010011
-						//4:0100011
-						//9:0001011
-						//7:0111011
-						
-						//세번째자리가 0인 경우에 대한 체크
-						
-						//네번재자리가 0 && 다섯번째자리가 0 = 4
-						if(arrCode[idx-3]=='0' && arrCode[idx-4]=='0' ) {
-							intCode[cnt]=4;
-							//sb.insert(0, 4);
-							break codeCheck;
-						}else if(arrCode[idx-3]=='0' && arrCode[idx-4]=='1'){
-							//네번재자리가 0 && 다섯번째자리가 1 = 2
-							intCode[cnt]=2;
-							//sb.insert(0, 2);
-							break codeCheck;
-						}else if(arrCode[idx-3]=='1' && arrCode[idx-4]=='0') {
-							//네번재자리가 1 && 다섯번째자리가 0 = 9
-							intCode[cnt]=9;
-							//sb.insert(0, 9);
-							break codeCheck;
-						}else if(arrCode[idx-3]=='1' && arrCode[idx-4]=='1'){
-							//네번재자리가 1 && 다섯번째자리가 1 = 7
-							intCode[cnt]=7;
-							//sb.insert(0, 7);
-							break codeCheck;
-						}else {
-							System.out.println("오류발생");
-						}
-						
-					}
-					
-				
+					tmpCode = 1;
+					break;
+				case 212:
+
+					tmpCode = 2;
+					break;
+				case 141:
+
+					tmpCode = 3;
+					break;
+				case 113:
+
+					tmpCode = 4;
+					break;
+				case 123:
+
+					tmpCode = 5;
+					break;
+				case 111:
+
+					tmpCode = 6;
+					break;
+				case 131:
+
+					tmpCode = 7;
+					break;
+				case 121:
+
+					tmpCode = 8;
+					break;
+				case 311:
+
+					tmpCode = 9;
+					break;
+				default:
+					System.out.println("오류남");
+
 				}
 
-			cnt--;
-			idx -= 7;
-			
-			}
-			
-			int sumReal =0;
-			int sum =0;
-			//intCode에 코드 들어감.
-			for(int i=0;i<intCode.length;i++) {
-				if(i%2==0){
-					sumReal+=intCode[i]*3;
-					
-				}else {
-					sumReal+=intCode[i];
+				// 암호문의 짝홀수번째 체크
+				if (c % 2 == 0) {
+					chkSum += tmpCode * 3;
+				} else {
+					chkSum += tmpCode;
 				}
-				sum += intCode[i];
-			}
-			
-				if(sumReal%10!=0) {
-				sum = 0;
+
+				// 최종합 저장
+				finSum += tmpCode;
+
 			}
 
-			sbAsw.append("#"+test_case+" "+sum+"\n");
-			
-			
+			// 프린트
+			sbAsw.append("#" + test_case + " ");
+			if (chkSum % 10 == 0) {
+				sbAsw.append(finSum);
+			} else {
+				sbAsw.append(0);
+			}
+			sbAsw.append("\n");
+
 		}
 
-	System.out.println(sbAsw.toString());
-		
+		System.out.println(sbAsw.toString());
+
 	}
 }
