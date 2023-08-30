@@ -8,31 +8,18 @@ import java.io.InputStreamReader;
 import java.util.Arrays;
 import java.util.StringTokenizer;
 
-public class Solution {
+public class Solution{
 	static int N;
 	static int[][] arr;
-	static int[] combArr;
-	static int[] comb2Arr;
 	static boolean[] chk;
 	static int min;
 
 	public static void main(String[] args) throws NumberFormatException, IOException {
-		// 가능한 조합의 갯수 쌍을 구하고
-		// 해당하는 조합을 구하여
-		// 그 경우만 살펴보자
-
-		// N은 짝수이므로 N/2일때는 딱 절반만 하면 된다.
-		// 1~N/2라고 생각해보자
-		// 1 , N-1
-		// 2, N-2 ....
-		// N/2까지가 갯수임
-
-		// r개의 조합을 구하는 코드
 
 		StringTokenizer st;
 		StringBuilder sb = new StringBuilder();
 
-		// System.setIn(new FileInputStream("res/sample_input.txt"));
+		 //stem.setIn(new FileInputStream("res/sample_input.txt"));
 		BufferedReader bf = new BufferedReader(new InputStreamReader(System.in));
 
 		int T = Integer.parseInt(bf.readLine());
@@ -42,8 +29,7 @@ public class Solution {
 			N = Integer.parseInt(bf.readLine());
 
 			arr = new int[N][N];
-			combArr = new int[N];
-			comb2Arr = new int[N];
+
 			chk = new boolean[N];
 
 			// 다 입력 받기
@@ -58,9 +44,13 @@ public class Solution {
 			// x-y와 y-x 모두 합해야됨
 			min = Integer.MAX_VALUE;
 
-			for (int i = 2; i <= N / 2; i++) {
-				comb(0, 0, 0, i);
+			
+			for(int r=0;r<=N/2;r++) {
+				chk = new boolean[N];
+				comb(0,0, r);
 			}
+				
+			
 
 			sb.append("#").append(test_case).append(" ").append(min).append("\n");
 		}
@@ -71,34 +61,59 @@ public class Solution {
 	static int sum;
 	static int sum2;
 
-	public static void comb(int idx, int sidx, int ridx, int r) {
+	public static void comb(int idx, int sidx, int r) {
 
-		if (idx == N) {
-			sum = 0;
-			sum2 = 0;
-			// 조합 생성 완료
+	if (sidx == r) {
 
-			for (int i = 0; i < sidx; i++) {
-				for (int j = 0; j < sidx; j++) {
-					sum += arr[combArr[i]][combArr[j]];
-				}
-			}
-			for (int i = 0; i < ridx; i++) {
-				for (int j = 0; j < ridx; j++) {
-					sum2 += arr[comb2Arr[i]][comb2Arr[j]];
-				}
-			}
-			min = Math.min(min, Math.abs(sum - sum2));
-			return;
+		comb2(N/2,0,N/2-r);
+		return;
+
+	}else {
+		
+		for( int i=idx;i<=N/2-r+sidx;i++) {			
+			chk[i] = true;
+			comb(i+1,sidx+1,r);
+			chk[i] = false;
 		}
-
-		if (sidx < r) {
-			combArr[sidx] = idx;
-			comb(idx + 1, sidx + 1, ridx, r);
+		
 		}
-
-		comb2Arr[ridx] = idx;
-		comb(idx + 1, sidx, ridx + 1, r);
+		
 	}
+	
+	
+	//N/2부터 시작
+	public static void comb2(int idx, int sidx, int r) {
 
+	if (sidx == r) {
+		sum=0;
+		sum2=0;
+		for(int j=0;j<chk.length;j++) {
+			if(chk[j]) {
+				sum+=add(j);
+			}else {
+				sum2+=add(j);
+			}
+		}
+		min = Math.min(min, Math.abs(sum-sum2));
+
+	}else {
+		
+		for( int i=idx;i<=N-r+sidx;i++) {			
+			chk[i] = true;
+			comb2(i+1,sidx+1,r);
+			chk[i] = false;
+		}
+		
+	}
+		
+	}
+	
+	public static int add(int idx) {
+		int all =0;
+		for(int i=0;i<chk.length;i++) {
+			if(chk[idx]==chk[i])all+=arr[idx][i];
+		}		
+		return all;
+	}
+	
 }
