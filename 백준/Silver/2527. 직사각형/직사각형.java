@@ -1,32 +1,53 @@
-import java.util.Scanner;
+
+
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.util.StringTokenizer;
 
 public class Main {
-
-	public static void main(String[] args) {
-		Scanner sc = new Scanner(System.in);
-		for (int i = 0; i < 4; i++) {
-			int x1 = sc.nextInt();
-			int y1 = sc.nextInt();
-			int p1 = sc.nextInt();
-			int q1 = sc.nextInt();
-			int x2 = sc.nextInt();
-			int y2 = sc.nextInt();
-			int p2 = sc.nextInt();
-			int q2 = sc.nextInt();
+	
+	public static void main(String[] args) throws Exception{
+		
+		StringBuilder sb = new StringBuilder();
+		BufferedReader bf = new BufferedReader(new InputStreamReader(System.in));
+		
+		int T = 4;
+		
+		for(int tc=1; tc<=T;tc++) {
 			
-			if (p1 < x2 || q1 < y2 || p2 < x1 || q2 < y1) {
-				System.out.println("d");
+			
+			StringTokenizer st = new StringTokenizer(bf.readLine());
+			
+			int ax = Integer.parseInt(st.nextToken());
+			int ay = Integer.parseInt(st.nextToken());
+			int ax2 = Integer.parseInt(st.nextToken());
+			int ay2 = Integer.parseInt(st.nextToken());
+			
+			int bx = Integer.parseInt(st.nextToken());
+			int by = Integer.parseInt(st.nextToken());
+			int bx2 = Integer.parseInt(st.nextToken());
+			int by2 = Integer.parseInt(st.nextToken());
+			if (ax2 < bx || ay2 < by || bx2 < ax || by2 < ay) {
+			
+				sb.append("d\n");
 			}
-			else if ((x1 == p2 && y1 == q2) || (x1 == p2 && q1 == y2) || (p1 == x2 && q1 == y2) || (p1 == x2 && y1 == q2)) {
-				System.out.println("c");
+			else if ((ax== bx2 && ay == by2) || (ax == bx2 && ay2 == by) || (ax2 == bx && ay2 == by) || (ax2 == bx && ay == by2)) {
+
+				sb.append("c\n");
 			}
-			else if (p1 == x2 || q1 == y2|| p2 == x1 || y1 == q2){
-				System.out.println("b");
+			else if (ax == bx2 || ay == by2|| bx == ax2 || by == ay2){
+				sb.append("b\n");
 			}
 			else {
-				System.out.println("a");
+				sb.append("a\n");
 			}
-		}
+
+
+			}
+		System.out.println(sb);
+			
+		
+		
 	}
 
 }
