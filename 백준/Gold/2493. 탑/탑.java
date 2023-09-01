@@ -2,7 +2,6 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Arrays;
 import java.util.Stack;
 import java.util.StringTokenizer;
 
@@ -11,6 +10,7 @@ public class Main {
 		BufferedReader bf = new BufferedReader(new InputStreamReader(System.in));
 		StringBuilder sb = new StringBuilder();
 		int N = Integer.parseInt(bf.readLine());
+
 		int[] arr = new int[N];
 		int[] bb = new int[N];
 		StringTokenizer st = new StringTokenizer(bf.readLine());
