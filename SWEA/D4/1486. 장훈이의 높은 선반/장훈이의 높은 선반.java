@@ -1,5 +1,3 @@
-
-
 import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.InputStreamReader;
@@ -50,6 +48,7 @@ public class Solution {
 			for (int j = 0; j < N; j++) {
 				if ((i & (1 << j)) > 0) {
 					top += empArr[j];
+                    if(top>min)break;
 				}
 
 				if(top>=B)min = Math.min(top, min);
