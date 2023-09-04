@@ -1,29 +1,29 @@
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.LinkedList;
+import java.util.ArrayDeque;
 import java.util.Queue;
 
 public class Main {
-	
+
 	public static void main(String[] args) throws NumberFormatException, IOException {
+		Queue<Integer> qu = new ArrayDeque<>();
+		BufferedReader bf = new BufferedReader(new InputStreamReader(System.in));
 		
-		StringBuilder sb = new StringBuilder();
+		int N = Integer.parseInt(bf.readLine());
 		
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in) );
+		//qu에 삽입
+		int cnt = 1;
+		while(cnt <=N) {
+			qu.add(cnt++);
+		}
 		
-		int N = Integer.parseInt(br.readLine());		
-		Queue<Integer> qu = new LinkedList<>();
-		
-		int i=1;
-		while(i<=N)qu.add(i++);
-		
-		while(qu.size()!=1) {
+		while(qu.size()>1) {
 			qu.poll();
 			qu.add(qu.poll());
 		}
 		
 		System.out.println(qu.poll());
 	}
-
 }
