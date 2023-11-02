@@ -1,8 +1,8 @@
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.util.Arrays;
-import java.util.PriorityQueue;
+import java.util.ArrayDeque;
+import java.util.Deque;
 import java.util.StringTokenizer;
 
 public class Main {
@@ -43,7 +43,7 @@ public class Main {
 			}
 		}
 
-		PriorityQueue<block> qu = new PriorityQueue<>();
+		Deque<block> qu = new ArrayDeque<>();
 
 		block tmp = new block(0, 0, arr[0][0], false);
 		vtArr[0][0].stageFalse = 1;
