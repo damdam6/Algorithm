@@ -51,7 +51,6 @@ all:		while(!pqu.isEmpty()) {
 			this.sum = sum;
 			this.cnt = cnt;
 		}
-		@Override
 		public int compareTo(sum o) {
 			if(this.cnt < o.cnt ) {
 				return -1;
