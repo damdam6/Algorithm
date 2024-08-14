@@ -1,4 +1,3 @@
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -18,6 +17,8 @@ public class Main {
 		}
 		
 		//어레이에 나와야하는 숫자 집어넣음.
+        
+        // 테스트용 수정임.
 		
 		int cnt = 1;//집어넣을 때마다 ++
 
