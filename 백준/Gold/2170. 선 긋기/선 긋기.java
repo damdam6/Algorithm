@@ -1,123 +1,62 @@
-
-
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.Collections;
+import java.util.PriorityQueue;
 import java.util.StringTokenizer;
 
-class line implements Comparable<line> {
-	int start;
-	int end;
+class Main{
+    public static void main(String[] args) throws Exception {
 
-	public line(int start, int end) {
-		this.start = start;
-		this.end = end;
-	}
 
-	public boolean chkSet(int start, int end) {
+        BufferedReader bf = new BufferedReader(new InputStreamReader(System.in));
+        int N = Integer.parseInt(bf.readLine());
 
-		if (this.start <= start && start <= this.end) {
+        PriorityQueue<Line> pqu = new PriorityQueue<>();
 
-			if (this.end < end) {
-				this.end = end;
-			}
-			return true;
-		} else if (this.end >= end && end >= this.start) {
-			if (this.start > start) {
-				this.start = start;
-			}
-			return true;
-		} else if (this.end < end && this.start > start) {
-			this.start = start;
-			this.end = end;
-			return true;
-		} else if (this.end >= end && this.start <= start) {
-			return true;
-		}
+        StringTokenizer st;
+        for (int i = 0; i < N; i++) {
+            st = new StringTokenizer(bf.readLine());
+            pqu.add(new Line(Integer.parseInt(st.nextToken()), Integer.parseInt(st.nextToken())));
+        }
 
-		return false;
-	}
+        int start = -1_000_000_000;
+        int end = -1_000_000_000;
 
-	public int getLong() {
-		return Math.abs(this.end - this.start);
-	}
+        int length = 0;
+        while(!pqu.isEmpty()){
 
-	public String toString() {
-		return "start " + this.start + " end " + this.end;
-	}
+            Line tmp = pqu.poll();
 
-	public int compareTo(line p) {
-		if (this.start > p.start) {
-			return 1;
-		} else if (this.start < p.start) {
-			return -1;
-		} else {
-			return 0;
-		}
-	}
+            if(end < tmp.startP){
+                length += end - start;
+                start = tmp.startP;
+                end = tmp.endP;
+                continue;
+            }
+            if( tmp.endP > end){
+                end = tmp.endP;
+                continue;
+            }
 
-}
+        }
+        length += end - start;
+        System.out.println(length);
+    }
 
-public class Main {
+   static class Line implements Comparable<Line>{
+        int startP;
+        int endP;
 
-	public static void main(String[] args) throws Exception {
+        public Line(int startP, int endP) {
+            this.startP = startP;
+            this.endP = endP;
+        }
 
-		StringBuilder sb = new StringBuilder();
-		BufferedReader bf = new BufferedReader(new InputStreamReader(System.in));
-
-		int N = Integer.parseInt(bf.readLine());
-		ArrayList<line> real = new ArrayList<>();
-		StringTokenizer st;
-		allfor: for (int i = 0; i < N; i++) {
-			st = new StringTokenizer(bf.readLine());
-			int a = Integer.parseInt(st.nextToken());
-			int b = Integer.parseInt(st.nextToken());
-
-			int start = Math.min(a, b);
-			int end = Math.max(a, b);
-			for (line q : real) {
-				// 노드에 값을 할당했으면 -> 위의 반복문으로 돌아감
-				if (q.chkSet(start, end)) {
-					continue allfor;
-				}
-			}
-			line c = new line(start, end);
-			real.add(c);
-		}
-
-		int sum = 0;
-
-		int minInt = -1;
-		int maxInt = -1;
-
-		Collections.sort(real);
-
-		int idx = 0;
-		while (idx < real.size() - 1) {
-
-			// 첫번째거랑 두 번째꺼 비교
-
-			// 두번째거 시작 지점이 첫번째꺼 끝보다 같거나 작으면
-			if (real.get(idx + 1).start <= real.get(idx).end) {
-				line a = real.get(idx);
-
-				a.end = Math.max(a.end, real.get(idx + 1).end);
-
-				real.set(idx, a);
-				real.remove(idx + 1);
-			} else {
-				// 삭제를 안했으면 다음꺼보기
-				idx++;
-			}
-		}
-
-		// System.out.println(real.toString());
-		for (line a : real) {
-			sum += a.getLong();
-		}
-
-		System.out.println(sum);
-	}
-
+        public int compareTo(Line o){
+            if(this.startP < o.startP)return -1;
+            if(this.startP > o.startP)return 1;
+            if(this.endP < o.endP)return -1;
+            if(this.endP > o.endP)return 1;
+            return 0;
+        }
+    }
 }
